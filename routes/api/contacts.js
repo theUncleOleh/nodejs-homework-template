@@ -1,25 +1,23 @@
-const express = require('express')
+const express = require("express");
+const router = express.Router();
+const { auth, validation } = require("../../middlewars");
+const { joiSchema, joiFavoriteSchema } = require("../../models/contact");
+const { contacts: controllers } = require("../../controllers");
 
-const router = express.Router()
+router.get("/", auth, controllers.getAll);
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get("/:id", controllers.getById);
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.post("/", auth, validation(joiSchema), controllers.addContact);
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.delete("/:id", controllers.removeContact);
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.put("/:id", validation(joiSchema), controllers.updateById);
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.patch(
+  "/:id/favorite",
+  validation(joiFavoriteSchema),
+  controllers.updateFavoriteContact
+);
 
-module.exports = router
+module.exports = router;
